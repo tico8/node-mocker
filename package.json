@@ -1,0 +1,21 @@
+{
+  "name": "node-mocker",
+  "version": "0.0.1",
+  "description": "Server for mocking.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://ghe.amb.ca.local/furuya-kaoru/node-mocker"
+  },
+  "keywords": [
+    "mock",
+    "node"
+  ],
+  "author": "furuya_kaoru",
+  "license": "BSD",
+  "readmeFilename": "README.md",
+  "gitHead": "d5903e487b20ce5e7043552d31c66c94d652a20c"
+}

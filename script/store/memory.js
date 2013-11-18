@@ -16,13 +16,16 @@ module.exports = new MemoryStore();
 MemoryStore.KEY_SEPALATOR = ':';
 
 MemoryStore.prototype.createKey = function() {
-    var key = '';
+    var key;
     var argKeys = Object.keys(arguments);
     for (var i = 0; i < argKeys.length; i++) {
-        if (!key) {
-            key = arguments[i];
-        } else {
-            key = key + MemoryStore.KEY_SEPALATOR + arguments[i];
+        var ele = arguments[i];
+        if (ele) {
+            if (!key) {
+                key = ele;
+            } else {
+                key = key + MemoryStore.KEY_SEPALATOR + ele;
+            }
         }
     }
     

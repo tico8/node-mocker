@@ -17,9 +17,7 @@ module.exports = new HttpInterface();
 
 HttpInterface.prototype.setup = function(option, callback) {
     var app = express();
-    app.configure(function() {
-        app.use(express.bodyParser());
-    });
+    app.use(express.bodyParser());
     
     //Controller �o�^
     app.get('/data', function(req, res){
@@ -105,8 +103,8 @@ HttpInterface.prototype.setup = function(option, callback) {
         res.json(200, { 'status' : 'ok'});
     });
 
-    app.listen(8080);
+    app.listen(option.port);
     callback && callback();
     
-    logger.info('HttpInterface is setuped.');
+    logger.info('HttpInterface is setuped. port = ' + option.port);
 }

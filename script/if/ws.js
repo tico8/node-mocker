@@ -18,7 +18,7 @@ module.exports = new WebSocketInterface();
 
 WebSocketInterface.prototype.setup = function(option, callback) {
     var WebSocketServer = ws.Server;
-    var wss = new WebSocketServer({port: 18080});
+    var wss = new WebSocketServer({port: option.port});
     var self = this;
     
     wss.on('connection', function(ws) {
@@ -30,7 +30,7 @@ WebSocketInterface.prototype.setup = function(option, callback) {
         });
     });
     
-    logger.info('WebSocketInterface is setuped.');
+    logger.info('WebSocketInterface is setuped. port = ' + option.port);
 };
 
 WebSocketInterface.prototype.connect = function(userId, ws) {

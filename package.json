@@ -10,6 +10,12 @@
     "type": "git",
     "url": "http://ghe.amb.ca.local/furuya-kaoru/node-mocker"
   },
+  "dependencies": {
+      "express": ">=3.4.4",
+      "ws": ">=0.4.31",
+      "socket.io": ">=0.9.16",
+      "log4js": ">=0.6.9"
+  },
   "keywords": [
     "mock",
     "node"

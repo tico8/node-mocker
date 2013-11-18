@@ -22,7 +22,7 @@ WebSocketInterface.prototype.setup = function(option, callback) {
     var self = this;
     
     wss.on('connection', function(ws) {
-        logger.info('WebSocket connected. : ');
+        logger.info('WebSocket connected. : ws.id = ' + JSON.stringify(ws));
         
         ws.on('message', function(message) {
             logger.info('WebSocket message. : message = ' + message);
@@ -39,6 +39,11 @@ WebSocketInterface.prototype.connect = function(userId, ws) {
     conn.ws = ws;
     conn.roomId = null;
     this.connections[userId] = conn;
+    
+    ws.on('close', function() {
+        logger.info('WebSocket disconnected. : ');
+        this.disconnect(userId);
+    });
     
     return conn;
 };

@@ -22,7 +22,7 @@ WebSocketInterface.prototype.setup = function(option, callback) {
     var self = this;
     
     wss.on('connection', function(ws) {
-        logger.info('WebSocket connected. : ws.id = ' + JSON.stringify(ws));
+        logger.info('WebSocket connected. :');
         
         ws.on('message', function(message) {
             logger.info('WebSocket message. : message = ' + message);

@@ -1,11 +1,12 @@
 node-mocker
 ===========
 
-* How to Install
-npm install http://ghe.amb.ca.local/furuya-kaoru/node-mocker/tarball/master
+# How to Install
+```
+npm install -g http://ghe.amb.ca.local/furuya-kaoru/node-mocker/tarball/master
+```
 
-* How to Use
-
+# How to Use
 ```sh
 node node-mocker
 ```
@@ -96,6 +97,17 @@ DELETE http://localhost:8080/data/{dataName}/{key}
 }
 ```
 
+## unicast
+```json
+{ 
+  "header" : {
+    "func" : "unicast",
+    "userId" : "1"
+  },
+  "json" : "{ \"message\" : \"message for 1\" }"
+}
+```
+
 ## broadcast for room
 ```json
 { 
@@ -103,7 +115,7 @@ DELETE http://localhost:8080/data/{dataName}/{key}
     "func" : "broadcast",
     "roomId" : "1"
   },
-  "json" : "{ \"message\" : \"message for room1\" }"
+  "json" : "{ \"message\" : \"message for room\" }"
 }
 ```
 
@@ -113,6 +125,6 @@ DELETE http://localhost:8080/data/{dataName}/{key}
   "header" : {
     "func" : "broadcast"
   },
-  "json" : "{ \"message\" : \"message for room1\" }"
+  "json" : "{ \"message\" : \"message for all\" }"
 }
 ```

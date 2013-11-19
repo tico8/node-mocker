@@ -119,6 +119,13 @@ WebSocketInterface.prototype.leave = function(userId, roomId, ws) {
     this.broadcast(roomId, JSON.stringify(leaveData));
 };
 
+WebSocketInterface.prototype.unicast = function(userId, data) {
+    var conn = this.connections[userId];
+    if (conn) {
+        conn.ws.send(data);
+    }
+};
+
 WebSocketInterface.prototype.broadcast = function(roomId, data) {
     var range;
     if (roomId) {
@@ -185,6 +192,10 @@ WebSocketInterface.prototype.handleMessage = function(ws, message) {
         var dataName = header.dataName;
         var key = header.key;
         this.handleData(ws, func, dataName, key, json, resFunc);
+        break;
+    case 'unicast':
+        var userId = header.userId;
+        this.unicast(userId, json);
         break;
     case 'broadcast':
         var roomId = header.roomId;

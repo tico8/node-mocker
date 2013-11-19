@@ -40,9 +40,10 @@ WebSocketInterface.prototype.connect = function(userId, ws) {
     conn.roomId = null;
     this.connections[userId] = conn;
     
+    var self = this;
     ws.on('close', function() {
         logger.info('WebSocket disconnected. : ');
-        this.disconnect(userId);
+        self.disconnect(userId);
     });
     
     return conn;

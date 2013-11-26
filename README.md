@@ -10,6 +10,16 @@ npm install -g http://ghe.amb.ca.local/furuya-kaoru/node-mocker/tarball/master
 ```sh
 node node-mocker
 ```
+# Admin Page
+you can use to manage the following functions.
+ - data management
+ - WebSocket monitoring
+
+## default port
+8080
+
+## url
+http://localhost:8080/
 
 # HTTP Interface
 ## default port

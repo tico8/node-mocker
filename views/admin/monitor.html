@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block script %}
+    var wsClient = new WsClient();
+    wsClient.setup(location.hostname, "{{wsPort}}", function() {
+        wsClient.onEvent('message', function(message) {
+            handleMessage(message);
+        });
+        
+        wsClient.join('admin', 'monitor');
+    });
+    
+    function handleMessage(message) {
+        var obj = JSON.parse(message);
+        switch (obj.header.func) {
+            case 'monitor_join':
+            case 'monitor_leave':
+                var menuId = 'userList';
+                var members = obj.header.members;
+                if (members) {
+                   clearMenu(menuId);
+                   var targetDivId = 'toggleDiv';
+                   
+                   //add connected user monitor
+                   for (var i = 0; i < members.length; i++) {
+                       var userId = members[i];
+                       addMenu(menuId, userId, 'javascript:toggleDiv(\"' + targetDivId + '\", \"' + userId + '\");');
+                       
+                       addMonitorDiv(targetDivId, userId);
+                   }
+                   
+                   // delete disconnected user monitor
+                   var monitorDivs = document.getElementById(targetDivId).childNodes;
+                   var monitorDivNum = monitorDivs.length;
+                   for (var j = 0; j < monitorDivNum; j++) {
+                       if (members.indexOf(monitorDivs[j].id) == -1) {
+                           deleteMonitorDiv(targetDivId, monitorDivs[j].id);
+                       }
+                   }
+                }
+                break;
+            case 'monitor_message':
+                var userId = obj.header.userId;
+                var userMessage = obj.json;
+                var dateStr = toLocaleString(obj.header.time);
+                addMonitorMessage(userId, dateStr + ' : ' + userMessage, '#ff00ff');
+                break;
+            default:
+                break;
+        }
+    }
+{% endblock %}
+
+
+{% block content %}
+<div id="box">
+
+    <div class="box1">
+        <div class="menu">
+            <ul id="userList">
+            </ul>
+        </div>
+    </div>
+    
+    <div class="box2" id="toggleDiv" style="display:block">
+    </div>
+    
+</div>
+{% endblock %}

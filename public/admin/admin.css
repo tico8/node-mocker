@@ -1,0 +1,196 @@
+body {
+	margin: 0px;
+	padding: 0px;
+}
+
+.main {
+	width: 800px;
+	position: absolute;
+	left: 50%;
+	margin-left: -400px;
+}
+
+//.main div {
+//	border: 1px solid #ff0000;
+//}
+
+#header {
+	min-height: 47px;
+	height: auto !important;
+	height: 47px;
+}
+
+#header h1 {
+	margin: 0;
+	padding: 10px 10px 15px;
+	font-size: 120%;
+	float: left;
+	line-height: 1em;
+}
+
+#header ul {
+	margin: 0;
+	padding: 8px 10px 3px 10px;
+	font-size: 70%;
+	text-align: right;
+}
+
+#header li {
+	margin: 0 0 5px 0;
+	line-height: 1.32em;
+}
+
+#header div {
+	min-height: 16px;
+	height: auto !important;
+	height: 16px;
+	padding: 5px 0;
+	color: #fff;
+	background: #888888;
+	font-size: 80%;
+	text-align: left;
+	line-height: 1.32em;
+	clear: both;
+}
+
+#header a {
+	color: #3366cc;
+	text-decoration: none;
+}
+
+#header a:hover {
+	color: #cc0000;
+}
+
+#header div a {
+	padding: 5px 10px;
+	color: #fff;
+}
+
+#header div a:hover {
+	padding: 6px 10px;
+	color: #fff;
+	background: #666666;
+}
+
+#box {
+	font-size: 80%;
+}
+
+#box div {
+	min-height: 15px;
+	height: auto !important;
+	height: 15px;
+	margin: 0 0 10px;
+}
+
+#box .box1 {
+	width: 200px;
+	padding: 10px;
+	float: left;
+}
+
+#box1 .menu {
+	width: 180px;
+	padding: 10px;
+	float: left;
+}
+
+.menu ul {
+	padding: 0px;
+	margin: 0px;
+}
+
+.menu li {
+	list-style-type: none;
+	padding: 0px;
+    margin: 0px;
+}
+
+.menu a {
+	display: block;
+	width: 100%;
+	text-decoration: none;
+	text-align: center;
+	color: #ffffff;
+	margin-top: 2px;
+	background: #888888;
+	border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+}
+
+.menu a:hover {
+	background: #666666;
+}
+
+#box .box2 {
+	width: 550px;
+	margin: 0;
+	padding: 10px;
+	float: right;
+}
+
+#footer {
+	clear: both;
+}
+
+#footer a {
+	color: #fff;
+	text-decoration: none;
+}
+
+#footer p {
+	margin: 0;
+	padding: 5px;
+	color: #fff;
+	background: #999;
+	border-bottom: 1px solid #666;
+	font-size: 65%;
+	font-family: verdana;
+	text-align: right;
+}
+
+#footer div {
+	padding: 5px;
+	background: #999;
+	border-top: 1px solid #ccc;
+}
+
+#footer div a {
+	margin: 0 5px;
+}
+
+#footer div p {
+	margin: 10px 0;
+	padding: 0;
+	border: none;
+	font-family: MS Gothic;
+	text-align: center;
+}
+
+table,td,th {
+	border: 1px #888888 solid;
+}
+
+#popup {
+	position: absolute;
+	width: 180px;
+	height: 80px;
+	left: 50%;
+	margin-left: -90;
+	top: 50%;
+	margin-top: -40;
+	background-color: rgba(0,0,0,0.65);;
+	border: 1px solid #fff;
+	text-align: center;
+	color: #ffffff;
+}
+
+p.info {
+	color: #0000ff;
+}
+
+p.warn {
+	color: #ff0000;
+}

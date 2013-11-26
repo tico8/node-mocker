@@ -1,0 +1,54 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>node-mocker</title>
+	<script type="text/javascript" src="admin/admin.js"></script>
+	<script type="text/javascript" src="sample/httpclient.js"></script>
+	<script type="text/javascript" src="sample/wsclient.js"></script>
+	<link rel="stylesheet" href="admin/admin.css" type="text/css" />
+	
+	<script>
+		function showPopup(message) {
+		    document.getElementById("popup_message").innerHTML = message;
+		    
+	        popup = document.getElementById("popup");
+	        popup.style.visibility = "visible";
+	    }
+		function hidePopup() {
+		    document.getElementById("popup_message").innerHTML = '';
+		    
+		    target = document.getElementById("popup");
+		    target.style.visibility = "hidden";
+		}
+		
+		{% block script %}{% endblock %}
+	</script>
+</head>
+<body>
+<div class="main">
+	<div id="header">
+		<h1>node-mocker</h1>
+		<ul>
+			<li>{{title}}</li>
+			<li><a href="">link-a</a>｜<a href="">link-b</a></li>
+		</ul>
+		<div>
+			<a href="/data">データ</a> <a href="/monitor">モニタ</a>
+		</div>
+	</div>
+
+    {% block content %}{% endblock %}
+
+	<div id="footer">
+		<p>
+			
+		</p>
+	</div>
+
+	<div id="popup" style="visibility: hidden;">
+	   <p id="popup_message">test</p>
+		<progress></progress>
+	</div>
+</div>
+</body>
+</html>

@@ -10,22 +10,49 @@ npm install -g http://ghe.amb.ca.local/furuya-kaoru/node-mocker/tarball/master
 ```sh
 node node-mocker
 ```
+# Admin Page
+you can use to manage the following functions.
+ - data management
+ - WebSocket monitoring
+
+## default port
+8080
+
+## url
+http://localhost:8080/
 
 # HTTP Interface
+## default port
+18080
+
 ## save data
 save json to memory
-POST http://localhost:8080/data/{dataName}/{key}?json={ \"name\" : \"value\"}
+POST http://localhost:18080/data/{dataName}/{key}?json={ \"name\" : \"value\"}
 
 ## get data
-GET http://localhost:8080/data/{dataName}/{key}
+GET http://localhost:18080/data/{dataName}/{key}
 
 ## list data
-GET http://localhost:8080/data/{dataName}/{key}?startWith=true
+GET http://localhost:18080/data/{dataName}/{key}?startWith=true
 
 ## delete data
-DELETE http://localhost:8080/data/{dataName}/{key}
+DELETE http://localhost:18080/data/{dataName}/{key}
 
 # WebSocket Interface
+## defult port
+28080
+
+## connect
+you should connect before send message.
+```js
+this.conn = new WebSocket('ws://' + host + ':' + port, []);
+this.conn.onopen = function() {
+    this.conn.onmessage = function (e) {
+      console.log('WebSocket message: ' + e.data);
+    };
+};
+```
+
 ## save data
 ```json
 { 

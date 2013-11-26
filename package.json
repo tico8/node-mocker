@@ -24,6 +24,7 @@
   ],
   "author": "furuya_kaoru",
   "license": "BSD",
+  "bin": "./bin/mocker",
   "readmeFilename": "README.md",
   "gitHead": "d5903e487b20ce5e7043552d31c66c94d652a20c"
 }

@@ -1,10 +1,10 @@
 var log4js = require('log4js');
 var logger = log4js.getLogger();
 
-var conf = require('script/conf');
-var adminIf = require('script/if/admin');
-var httpIf = require('script/if/http');
-var wsIf = require('script/if/ws');
+var conf = require('lib/conf');
+var adminIf = require('lib/if/admin');
+var httpIf = require('lib/if/http');
+var wsIf = require('lib/if/ws');
 
 adminIf.setup({ 'port' : conf.admin.port});
 httpIf.setup({ 'port' : conf.http.port});

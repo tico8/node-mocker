@@ -1,31 +1,184 @@
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title>{{title}}</title>
+{% extends 'base.html' %}
 
+{% block script %}
 
-</head>
-<body>
-
-    <h1>{{title}}</h1>
-    <form action="data" method="GET">
-        dataName<input name="dataName" type="text" value="{{dataName}}"></br>
-        key<input name="key" type="text" value="{{key}}"></br>
-        <input title="load" type="submit"></input>
-    </form>
+function search() {
+    var outputTable = 'resultTable';
+    clearColumn(outputTable);
+    var dataName = document.getElementById('search_dataName').value;
+    var key = document.getElementById('search_key').value;
+    var startWith = document.getElementById('search_startWith').checked;
     
-    <table border="1">
-        <tr>
-            <th>key</th>
-            <th>value</th>
-        </tr>
-        {% for data in dataList %}
-        <tr>
-            <td>{{data.key}}</td>
-            <td>{{data.value}}</td>
-        </tr>
-        {% endfor %}
-    </table>
+    if (startWith) {
+        showPopup('search ...');
+        listData(location.hostname, "{{apiPort}}", dataName, key, function(err, data) {
+            if (err) {
+                console.error(err);
+                document.getElementById('search_status').className = 'warn';
+	            document.getElementById('search_status').innerHTML = err.message;
+            } else {
+                //console.log(data);
+                
+                //output table
+                var array = JSON.parse(data);
+                for (var i = 0; i < array.length; i++) {
+                    addColumn(outputTable, array[i].key, array[i].value);
+                }
+                
+                document.getElementById('search_status').className = 'info';
+                document.getElementById('search_status').innerHTML = 'done.';
+            }
+            
+            hidePopup();
+        });
+    } else {
+        if (!dataName || !key) {
+            document.getElementById('search_status').className = 'warn';
+            document.getElementById('search_status').innerHTML = 'dataName and key is required';
+            return;
+        }
+        showPopup('search ...');
+        getData(location.hostname, "{{apiPort}}", dataName, key, function(err, data) {
+	        if (err) {
+	            console.error(err);
+	            document.getElementById('search_status').className = 'warn';
+                document.getElementById('search_status').innerHTML = err.message;
+	        } else {
+	            //console.log(data);
+	            
+	            //output table
+	            var obj = JSON.parse(data);
+	            addColumn(outputTable, obj.key, obj.value);
+	        }
+	        
+	        hidePopup();
+	    });
+    }
+}
 
-</body>
-</html>
+function register() {
+    document.getElementById('register_status').className = 'info';
+    document.getElementById('register_status').innerHTML = '';
+
+    var dataName = document.getElementById('register_dataName').value;
+    var key = document.getElementById('register_key').value;
+    var json = document.getElementById('register_json').value;
+    
+    if (!dataName || !key || !json) {
+        document.getElementById('register_status').className = 'warn';
+        document.getElementById('register_status').innerHTML = 'dataName and key and json is required';
+        return;
+    }
+    
+    showPopup('register ...');
+    saveData(location.hostname, "{{apiPort}}", dataName, key, json, function(err, data) {
+        if (err) {
+            document.getElementById('register_status').className = 'warn';
+            document.getElementById('register_status').innerHTML = err.message;
+        } else {
+            console.log(data);
+            document.getElementById('register_status').className = 'info';
+            document.getElementById('register_status').innerHTML = 'success !!';
+        }
+        
+        hidePopup();
+    });
+}
+
+function del() {
+    document.getElementById('delete_status').className = 'info';
+    document.getElementById('delete_status').innerHTML = '';
+
+    var dataName = document.getElementById('delete_dataName').value;
+    var key = document.getElementById('delete_key').value;
+    
+    if (!dataName || !key) {
+        document.getElementById('delete_status').className = 'warn';
+        document.getElementById('delete_status').innerHTML = 'dataName and key and json is required';
+        return;
+    }
+    
+    showPopup('delete ...');
+    deleteData(location.hostname, "{{apiPort}}", dataName, key, function(err, data) {
+        if (err) {
+            console.error(err);
+            document.getElementById('delete_status').className = 'warn';
+            document.getElementById('delete_status').innerHTML = err.message;
+        } else {
+            document.getElementById('delete_status').className = 'info';
+            document.getElementById('delete_status').innerHTML = 'success !!';
+        }
+        
+        hidePopup();
+    });
+}
+
+{% endblock %}
+
+{% block content %}
+<div id="box">
+
+	<div class="box1">
+		<div class="menu">
+			<ul>
+				<li><a href="javascript:toggleDiv('toggleDiv', 'data-search');">search</a></li>
+				<li><a href="javascript:toggleDiv('toggleDiv', 'data-register');">register</a></li>
+				<li><a href="javascript:toggleDiv('toggleDiv', 'data-delete');">delete</a></li>
+			</ul>
+		</div>
+	</div>
+	
+	<div class="box2" id="toggleDiv" style="display:block">
+		<!-- Data Search -->
+		<div id="data-search">
+			<h2>search data</h2>
+			<div>
+				<form action="data" method="GET">
+					dataName<input id="search_dataName" type="text"></br>
+					key<input id="search_key" type="text"></br>
+					startWith<input id="search_startWith" type="checkbox" checked></br>
+					<input type="button" value="Search" onclick="javascript:search();">
+					<p id="search_status" class="info"></p>
+				</form>
+			</div>
+			<div>
+				<table id="resultTable">
+					<tr>
+						<th>key(dataName:*)</th>
+						<th>value</th>
+					</tr>
+				</table>
+			</div>
+		</div>
+		
+		<!-- Data Register -->
+        <div id="data-register" style="display:none">
+            <h2>register data</h2>
+            <div>
+                <form action="data" method="POST">
+                    dataName<input id="register_dataName" type="text"></br>
+                    key<input id="register_key" type="text"></br>
+                    json<input id="register_json" type="text"></br>
+                    <input type="button" value="Register" onclick="javascript:register();">
+                    <p id="register_status" class="info"></p>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Data Delete -->
+        <div id="data-delete" style="display:none">
+            <h2>delete data</h2>
+            <div>
+                <form action="data" method="DELETE">
+                    dataName<input id="delete_dataName" type="text"></br>
+                    key<input id="delete_key" type="text"></br>
+                    <input type="button" value="Delete" onclick="javascript:del();">
+                    <p id="delete_status" class="info"></p>
+                </form>
+            </div>
+        </div>
+        
+	</div>
+	
+</div>
+{% endblock %}

@@ -8,6 +8,7 @@ var logger = log4js.getLogger();
 var express = require('express');
 var cons = require('consolidate');
 
+var conf = require('script/conf');
 var store = require('../store/memory.js');
 
 function HttpInterface() {
@@ -18,34 +19,31 @@ module.exports = new HttpInterface();
 
 HttpInterface.prototype.setup = function(option, callback) {
     var app = express();
+    app.use(express.bodyParser());
     app.engine('html', cons.swig);
     app.set('view engine', 'html');
     app.set('views', __dirname + '/../../views/admin');
+    app.use(express.static(__dirname + '/../../public'));
     
     //Controller
     app.get('/', function(req, res) {
-        res.render('index', {
-            title : 'node-mocker admin page'
+        res.render('data', {
+            title : 'data page',
+            apiPort : conf.http.port,
         });
     });
+    
     app.get('/data', function(req, res) {
-        var prefix = store.createKey(req.query.dataName, req.query.key);
-        var rx = new RegExp('^' + prefix);
-        var dataList = [];
-        Object.keys(store.data).forEach(function(key) {
-            var m = key.match(rx);
-            if (m && m.length > 0) {
-                dataList.push({
-                    'key' : key,
-                    'value' : store.data[key]
-                });
-            }
-        });
         res.render('data', {
-            title : 'node-mocker data page',
-            dataName : req.query.dataName,
-            key : req.query.key,
-            dataList : dataList
+            title : 'data page',
+            apiPort : conf.http.port,
+        });
+    });
+    
+    app.get('/monitor', function(req, res) {
+        res.render('monitor', {
+            title : 'monitor page',
+            wsPort : conf.ws.port,
         });
     });
 

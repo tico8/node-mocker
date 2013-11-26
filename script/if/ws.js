@@ -14,6 +14,8 @@ function WebSocketInterface() {
     this.room = {}; // key : roomId, value : connections(Object)
 }
 
+WebSocketInterface.ROOM_ID_MONITOR = 'monitor'; //管理画面でトレースするための部屋
+
 module.exports = new WebSocketInterface();
 
 WebSocketInterface.prototype.setup = function(option, callback) {
@@ -26,7 +28,7 @@ WebSocketInterface.prototype.setup = function(option, callback) {
         
         ws.on('message', function(message) {
             logger.info('WebSocket message. : message = ' + message);
-            self.handleMessage(ws, message);
+            self.handleMessage(null, ws, message);
         });
     });
     
@@ -41,6 +43,10 @@ WebSocketInterface.prototype.connect = function(userId, ws) {
     this.connections[userId] = conn;
     
     var self = this;
+    ws.on('message', function(message) {
+        logger.info('WebSocket message. : message = ' + message);
+        self.handleMessage(userId, ws, message);
+    });
     ws.on('close', function() {
         logger.info('WebSocket disconnected. : ');
         self.disconnect(userId);
@@ -62,6 +68,16 @@ WebSocketInterface.prototype.disconnect = function(userId) {
     
     // disconnect
     delete this.connections[userId];
+    
+    //notification for monitor
+    var leaveMonData = {
+            'header' : {
+                'func' : 'monitor_leave',
+                'userId' : userId,
+                'members' : Object.keys(this.connections)
+            }
+    };
+    this.broadcast(WebSocketInterface.ROOM_ID_MONITOR, JSON.stringify(leaveMonData));
 };
 
 WebSocketInterface.prototype.join = function(userId, ws, roomId) {
@@ -93,6 +109,16 @@ WebSocketInterface.prototype.join = function(userId, ws, roomId) {
             }
     };
     this.broadcast(roomId, JSON.stringify(joinData));
+    
+    //notification for monitor
+    var joinMonData = {
+            'header' : {
+                'func' : 'monitor_join',
+                'userId' : userId,
+                'members' : Object.keys(this.connections)
+            }
+    };
+    this.broadcast(WebSocketInterface.ROOM_ID_MONITOR, JSON.stringify(joinMonData));
 };
 
 WebSocketInterface.prototype.leave = function(userId, roomId, ws) {
@@ -102,10 +128,8 @@ WebSocketInterface.prototype.leave = function(userId, roomId, ws) {
         return;
     }
     
-    if (conn.roomId) {
-        delete this.room[roomId][userId];
-        conn.roomId = null;
-    }
+    delete this.room[roomId][userId];
+    conn.roomId = null;
     
     //notification
     var members = Object.keys(this.room[roomId]);
@@ -127,12 +151,24 @@ WebSocketInterface.prototype.unicast = function(userId, data) {
     }
 };
 
-WebSocketInterface.prototype.broadcast = function(roomId, data) {
+WebSocketInterface.prototype.monitor = function(userId, data) {
+    var data = {
+            'header' : {
+                'func' : 'monitor_message',
+                'userId' : userId,
+                'time' : new Date().getTime()
+            },
+            'json' : data
+    };
+    this.broadcast(WebSocketInterface.ROOM_ID_MONITOR, JSON.stringify(data));
+}
+
+WebSocketInterface.prototype.broadcast = function(roomId, json) {
     var range;
     if (roomId) {
         // only room
         range = this.room[roomId];
-        logger.info('WebSocket broadcast for room. : ');
+        logger.info('WebSocket broadcast for room. : roomId = ' + roomId);
     } else {
         // all connections
         range = this.connections;
@@ -146,13 +182,13 @@ WebSocketInterface.prototype.broadcast = function(roomId, data) {
     
     Object.keys(range).forEach(function(key) {
         var conn = range[key];
-        conn.ws.send(data);
+        conn.ws.send(json);
     })
 };
 
-WebSocketInterface.prototype.handleMessage = function(ws, message) {
+WebSocketInterface.prototype.handleMessage = function(userId, ws, message) {
     if (!message) {
-        this.response(ws, '', 'error', 'message is invalid.');
+        this.response(ws, '', 'error', 'message is invalid.', message);
         return;
     }
     
@@ -160,13 +196,13 @@ WebSocketInterface.prototype.handleMessage = function(ws, message) {
         var obj = JSON.parse(message);
     } catch (e) {
         console.log(e);
-        this.response(ws, '', 'error', e.message);
+        this.response(ws, '', 'error', e.message, message);
         return;
     }
     var header = obj.header;
     var json = obj.json;
     if (!header) {
-        this.response(ws, '', 'error', 'header is required.');
+        this.response(ws, '', 'error', 'header is required.', message);
         return;
     }
     
@@ -204,11 +240,13 @@ WebSocketInterface.prototype.handleMessage = function(ws, message) {
         this.broadcast(roomId, json);
         break;
     default:
-        var message = 'WebSocket message func is unsupported. func = : ' + func;
-        this.response(conn, resFunc, 'error', message);
-        logger.error(message);
+        var errmsg = 'WebSocket message func is unsupported. func = : ' + func;
+        this.response(ws, resFunc, 'error', errmsg, message);
+        logger.error(errmsg);
         break;
     }
+    
+    this.monitor(userId, message);
 };
 
 WebSocketInterface.prototype.handleData = function(conn, func, dataName, key, json, resFunc) {
@@ -263,7 +301,7 @@ WebSocketInterface.prototype.handleData = function(conn, func, dataName, key, js
     }
 };
 
-WebSocketInterface.prototype.response = function(conn, func, status, message, json) {
+WebSocketInterface.prototype.response = function(ws, func, status, message, json) {
     var res = {
             'header' : {
                 'func' : '',
@@ -277,5 +315,5 @@ WebSocketInterface.prototype.response = function(conn, func, status, message, js
     res.header.message = message;
     res.json = json;
     
-    conn.send(JSON.stringify(res));
+    ws.send(JSON.stringify(res));
 };

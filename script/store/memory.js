@@ -47,9 +47,17 @@ MemoryStore.prototype.get = function(key, callback) {
         callback && callback(err, null);
         return;
     }
-
-    var result = this.data[key];
-    callback && callback(err, result);
+    
+    var result;
+    if (this.data[key]) {
+        result = {
+                'key' : key,
+                'value' : this.data[key]
+        };
+        callback && callback(err, result);
+    } else {
+        callback && callback(err, result);
+    }
 };
 
 MemoryStore.prototype.list = function(prefix, callback) {
@@ -66,7 +74,10 @@ MemoryStore.prototype.list = function(prefix, callback) {
     Object.keys(this.data).forEach(function(key) {
         var m = key.match(rx);
         if (m && m.length > 0) {
-            result.push(self.data[key])
+            result.push({
+                'key' : key,
+                'value' : self.data[key]
+            });
         }
     });
     callback && callback(err, result);

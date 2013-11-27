@@ -4,8 +4,9 @@ function clearColumn(targetId) {
         alert('target is not table. id = ' + targetId);
     }
     
-    for (var i = 1; i < table.rows.length; i++ ) {  
-        table.deleteRow(i);
+    var rowNum = table.rows.length;
+    for (var i = 0; i < rowNum; i++ ) {  
+        table.deleteRow(0);
     }  
 }
 

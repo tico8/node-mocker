@@ -26,7 +26,6 @@ http://localhost:8080/
 18080
 
 ## save data
-save json to memory
 POST http://localhost:18080/data/{dataName}/{key}?json={ \"name\" : \"value\"}
 
 ## get data

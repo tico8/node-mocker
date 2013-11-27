@@ -113,6 +113,56 @@ function del() {
     });
 }
 
+function restore() {
+    showPopup('delete ...');
+    var form = document.getElementById("restore_form");
+
+    if(!(window.FormData)){
+        // サブミットを実行してアップロード
+        form.submit();
+        hidePopup();
+        return;
+    }
+
+    var form_data = new FormData(form);
+    var url = "/restore";
+    var request = createXMLHttpRequest();
+
+    if(request.upload){
+        var upload = request.upload;
+
+        upload.onloadstart = function (e){
+            document.getElementById('delete_status').className = 'warn';
+            document.getElementById('delete_status').innerHTML = e.message;
+        };
+        upload.onloadend = function (e){
+            document.getElementById('delete_status').className = 'warn';
+            document.getElementById('delete_status').innerHTML = e.message;
+        };
+        upload.ontimeout = function (e){
+            document.getElementById('delete_status').className = 'warn';
+            document.getElementById('delete_status').innerHTML = e.message;
+        };
+        upload.onabort = function (e){
+            document.getElementById('delete_status').className = 'warn';
+            document.getElementById('delete_status').innerHTML = e.message;
+        };
+        upload.onerror = function (e){
+            document.getElementById('delete_status').className = 'warn';
+            document.getElementById('delete_status').innerHTML = e.message;
+        };
+
+        upload.onload = function (e){
+            hidePopup();
+            document.getElementById('restore_status').className = 'info';
+            document.getElementById('restore_status').innerHTML = 'success !!';
+        };
+    }
+    
+    request.open(form.method, form.action);
+    request.send(form_data);
+}
+
 {% endblock %}
 
 {% block content %}
@@ -124,11 +174,14 @@ function del() {
 				<li><a href="javascript:toggleDiv('toggleDiv', 'data-search');">search</a></li>
 				<li><a href="javascript:toggleDiv('toggleDiv', 'data-register');">register</a></li>
 				<li><a href="javascript:toggleDiv('toggleDiv', 'data-delete');">delete</a></li>
+				<li><a href="javascript:toggleDiv('toggleDiv', 'data-dump');">dump</a></li>
+				<li><a href="javascript:toggleDiv('toggleDiv', 'data-restore');">restore</a></li>
 			</ul>
 		</div>
 	</div>
 	
 	<div class="box2" id="toggleDiv" style="display:block">
+		
 		<!-- Data Search -->
 		<div id="data-search">
 			<h2>search data</h2>
@@ -174,6 +227,29 @@ function del() {
                     key<input id="delete_key" type="text"></br>
                     <input type="button" value="Delete" onclick="javascript:del();">
                     <p id="delete_status" class="info"></p>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Data Dump -->
+        <div id="data-dump" style="display:none">
+            <h2>dump data</h2>
+            <div>
+                <form action="dump" method="GET">
+                    <input type="submit" value="Dump">
+                    <p id="dump_status" class="info"></p>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Data Restore -->
+        <div id="data-restore" style="display:none">
+            <h2>dump data</h2>
+            <div>
+                <form id="restore_form" action="restore" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="dumpFile"></br>
+                    <input type="button" value="Restore" onclick="javascript:restore();">
+                    <p id="restore_status" class="info"></p>
                 </form>
             </div>
         </div>

@@ -3,12 +3,12 @@ node-mocker
 
 # How to Install
 ```
-npm install -g http://ghe.amb.ca.local/furuya-kaoru/node-mocker/tarball/master
+npm install -g https://github.com/tico8/node-mocker/tarball/master
 ```
 
 # How to Use
 ```sh
-node node-mocker
+node-mocker
 ```
 # Admin Page
 you can use to manage the following functions.

@@ -10,6 +10,13 @@ npm install -g https://github.com/tico8/node-mocker/tarball/master
 ```sh
 node-mocker
 ```
+
+## Sample
+code for client side.
+```
+https://github.com/tico8/node-mocker/tree/master/public/sample
+```
+
 # Admin Page
 you can use to manage the following functions.
  - data management

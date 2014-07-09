@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://ghe.amb.ca.local/furuya-kaoru/node-mocker"
+    "url": "http://github.com/tico8/node-mocker"
   },
   "dependencies": {
       "express": ">=3.4.4",
